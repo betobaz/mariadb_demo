@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  db:
+    image: mariadb:latest
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: demo123
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: devuser
+      MYSQL_PASSWORD: devpw
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/workspaces/mariadb-demo:cached
+    depends_on:
+      - db
+    # do not publish 3306 from dev
+
+volumes:
+  db_data:
