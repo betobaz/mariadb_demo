@@ -1,16 +1,7 @@
-// More info: https://containers.dev/implementors/json_reference/
 {
-	"name": "WP & MySQL",
-
-	"build": {
-		"dockerfile": "Dockerfile",
-		"context": ".."
-	},
-
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	
-	"remoteUser": "root"
-
-	
-
+  "name": "Dev (with DB)",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "shutdownAction": "stopCompose",
+  "workspaceFolder": "/workspaces/mariadb-demo"
 }
