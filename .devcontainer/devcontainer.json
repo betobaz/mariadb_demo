@@ -1,0 +1,16 @@
+// More info: https://containers.dev/implementors/json_reference/
+{
+	"name": "WP & MySQL",
+
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": ".."
+	},
+
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	
+	"remoteUser": "root"
+
+	
+
+}
