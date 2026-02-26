@@ -11,7 +11,7 @@ services:
       MYSQL_PASSWORD: dbapass
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./mysql/mysql.cnf:/etc/mysql/conf.d/lab.cnf
+      - ./mysql/my.cnf:/etc/mysql/conf.d/lab.cnf
       - ./logs/mysql:/var/log/mysql
       - ./mysql/init/:/docker-entrypoint-initdb.d/
     ports:
@@ -43,6 +43,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  volumes:
-    mysql_data:
-    pg_data:
+
+volumes:
+  mysql_data:
+  pg_data:
