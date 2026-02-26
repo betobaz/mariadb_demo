@@ -1,0 +1,5 @@
+*.log
+multi_dbms_lab/logs/mysql/*
+multi_dbms_lab/logs/postgres/*
+!multi_dbms_lab/logs/mysql/.gitkeep
+!multi_dbms_lab/logs/postgres/.gitkeep
