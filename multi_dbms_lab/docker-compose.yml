@@ -1,23 +1,23 @@
 version: '3.8'
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: lab_mysql
+  mariadb:
+    image: mariadb:10.11
+    container_name: lab_mariadb
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: mysqlroot
-      MYSQL_DATABASE: labdb
-      MYSQL_USER: dba_user
-      MYSQL_PASSWORD: dbapass
+      MARIADB_ROOT_PASSWORD: mysqlroot
+      MARIADB_DATABASE: labdb
+      MARIADB_USER: dba_user
+      MARIADB_PASSWORD: dbapass
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       - ./mysql/my.cnf:/etc/mysql/conf.d/lab.cnf
       - ./logs/mysql:/var/log/mysql
       - ./mysql/init/:/docker-entrypoint-initdb.d/
     ports:
       - "3306:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pmysqlroot"]
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-pmysqlroot"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -45,5 +45,5 @@ services:
       retries: 5
 
 volumes:
-  mysql_data:
+  mariadb_data:
   pg_data:
