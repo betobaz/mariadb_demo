@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: lab_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlroot
+      MYSQL_DATABASE: labdb
+      MYSQL_USER: dba_user
+      MYSQL_PASSWORD: dbapass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/mysql.cnf:/etc/mysql/conf.d/lab.cnf
+      - ./logs/mysql:/var/log/mysql
+      - ./mysql/init/:/docker-entrypoint-initdb.d/
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-pmysqlroot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  postgres:
+    image: postgres:16
+    container_name: lab_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: pgroot
+      POSTGRES_DB: labdb
+      POSTGRES_USER: dba_user
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+      - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./logs/postgres:/var/log/postgresql
+      - ./postgres/init/:/docker-entrypoint-initdb.d/
+    ports:
+      - "5432:5432"
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dba_user -d labdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  volumes:
+    mysql_data:
+    pg_data:
