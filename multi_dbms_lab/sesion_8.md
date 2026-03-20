@@ -19,3 +19,28 @@ docker exec lab_mariadb mysql -uroot -pmysqlroot \
       FROM information_schema.TABLES
       WHERE TABLE_SCHEMA = 'labdb';"
 ```
+
+**Ver los tablespaces del sistema (ibdata, undo, temp):**
+```bash
+# MariaDB usa INNODB_SYS_TABLESPACES (con prefijo SYS) y SPACE en lugar de SPACE_ID
+docker exec lab_mariadb mysql -uroot -pmysqlroot \
+  -e "SELECT SPACE, NAME, FILE_SIZE, ALLOCATED_SIZE
+      FROM information_schema.INNODB_SYS_TABLESPACES
+      ORDER BY SPACE;"
+```
+
+
+### Demo 2 — Estructura de archivos en PostgreSQL
+
+**Encontrar el OID de `labdb`:**
+```bash
+docker exec lab_postgres psql -U dba_user -d labdb \
+  -c "SELECT oid, datname FROM pg_database WHERE datname = 'labdb';"
+```
+
+**Ver el directorio físico de la base de datos:**
+```bash
+# Sustituir <OID> por el número devuelto arriba
+docker exec lab_postgres ls -lh /var/lib/postgresql/data/base/<OID>/ | head -20
+# Cada número es el relfilenode de una tabla o índice
+```
