@@ -44,3 +44,19 @@ docker exec lab_postgres psql -U dba_user -d labdb \
 docker exec lab_postgres ls -lh /var/lib/postgresql/data/base/<OID>/ | head -20
 # Cada número es el relfilenode de una tabla o índice
 ```
+
+**Relacionar el relfilenode con el nombre de la tabla:**
+```bash
+docker exec lab_postgres psql -U dba_user -d labdb -c \
+  "SELECT relname, relfilenode, relpages, relkind
+   FROM pg_class
+   WHERE relname IN ('empleados', 'empleados_pkey')
+   ORDER BY relname;"
+```
+
+**Confirmar la ruta completa del archivo de la tabla:**
+```bash
+docker exec lab_postgres psql -U dba_user -d labdb \
+  -c "SELECT pg_relation_filepath('empleados');"
+# Devuelve: base/<OID>/<relfilenode>
+```
