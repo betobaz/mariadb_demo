@@ -45,4 +45,26 @@ tail -f /var/log/mysql/slow.log
 # En la primer ventana ejecutar 
 SELECT SLEEP(1);
 
+# Salir del contenedor
+exit # De la base de datos
+exit # Del contenedor
+```
+
+### Postgresql
+```
+docker exec -it lab_postgres bash
+psql -U dba_user -d labdb
+
+ALTER SYSTEM SET log_min_duration_statement = 500;
+SELECT pg_reload_conf();
+
+# Abrir otra ventana y ejecutar
+tail -f postgresql-2026-03-26.log | grep duration:
+
+# En la primer ventana ejecutar 
+SELECT pg_sleep(1);
+
+# Salir del contenedor
+exit # De la base de datos
+exit # Del contenedor
 ```
