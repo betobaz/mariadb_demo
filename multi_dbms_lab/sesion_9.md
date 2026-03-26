@@ -29,3 +29,20 @@ docker exec lab_postgres psql -U dba_user -d labdb \
 docker exec lab_postgres tail -30 /var/log/postgresql-$(date +%Y-%m-%d).log
 
 ```
+
+## Slow Query Log — activar y leer:
+
+```
+docker exec -it lab_mariadb bash
+mysql -uroot -pmysqlroot
+
+SHOW VARIABLES LIKE 'slow_query_log%';
+SHOW VARIABLES LIKE 'long_query_time';
+
+# Abrir otra ventana y ejecutar
+tail -f /var/log/mysql/slow.log
+
+# En la primer ventana ejecutar 
+SELECT SLEEP(1);
+
+```
