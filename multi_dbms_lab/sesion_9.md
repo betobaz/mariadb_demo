@@ -68,3 +68,16 @@ SELECT pg_sleep(1);
 exit # De la base de datos
 exit # Del contenedor
 ```
+
+## Binary Log
+
+### Maria DB
+
+```
+docker exec lab_mariadb mysql -uroot -pmysqlroot \
+  -e "SHOW VARIABLES LIKE 'log_bin%'; SHOW BINARY LOGS;"
+
+# Leer con mysqlbinlog (herramienta externa)
+docker exec lab_mariadb mysqlbinlog /var/log/mysql/binlog.000003 | head -50
+
+```
