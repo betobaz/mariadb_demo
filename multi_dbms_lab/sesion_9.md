@@ -81,3 +81,50 @@ docker exec lab_mariadb mysql -uroot -pmysqlroot \
 docker exec lab_mariadb mysqlbinlog /var/log/mysql/binlog.000003 | head -50
 
 ```
+
+## Ver el log de errores de ambos motores al arrancar
+```
+docker logs lab_mariadb 2>&1 | grep -i "ready\|error\|warning" | head -15
+
+docker logs lab_postgres 2>&1 | grep -i "ready\|error\|warning" | head -15
+
+```
+
+## Demo comparativa — DDL transaccional vs no transaccional
+
+```
+docker exec -it lab_postgres bash
+psql -U dba_user -d labdb
+# Listar las tablas
+\dt
+
+BEGIN;
+CREATE TABLE prueba_transaccional (id INT);
+INSERT INTO prueba_transaccional VALUES (1),(2),(3);
+-- La tabla EXISTE durante la transacción
+SELECT * FROM prueba_transaccional;
+ROLLBACK;
+-- La tabla DESAPARECE al hacer rollback
+SELECT * FROM prueba_transaccional;  -- ERROR: relation does not exist
+
+```
+
+### Maria DB
+
+```
+docker exec -it lab_mariadb bash
+mysql -uroot -pmysqlroot
+
+START TRANSACTION;
+INSERT INTO empleados (nombre, departamento, salario) VALUES ('Prueba', 'QA', 10000);
+CREATE TABLE prueba_mariadb (id INT);   -- ← commit implícito aquí
+ROLLBACK;
+
+SELECT * FROM empleados WHERE nombre='Prueba';
+-- La tabla también existe
+SHOW TABLES LIKE 'prueba_mariadb';
+-- Limpiar
+DELETE FROM empleados WHERE nombre='Prueba';
+DROP TABLE prueba_mariadb;
+
+```
